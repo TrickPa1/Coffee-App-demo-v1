@@ -2,42 +2,44 @@ import 'package:flutter/material.dart';
 import 'coffee.dart';
 
 class CoffeeShop extends ChangeNotifier {
-  // Lista de cafés disponíveis
   final List<Coffee> _shop = [
     Coffee(
       name: 'Preto Forte',
       price: 200.0,
       imagePath: 'assets/images/black.png',
+      description: 'Café preto encorpado e rico em aroma, perfeito para começar o dia com energia.',
     ),
     Coffee(
       name: 'Espresso',
       price: 300.0,
       imagePath: 'assets/images/espresso.jpeg',
+      description: 'Dose concentrada de puro café arábica com uma crema aveludada e intensa.',
     ),
     Coffee(
       name: 'Cappuccino',
       price: 275.0,
       imagePath: 'assets/images/cappucino.jpeg',
+      description: 'Mistura harmoniosa de espresso, leite vaporizado e uma generosa camada de espuma de leite.',
     ),
     Coffee(
       name: 'Café Gelado',
       price: 280.0,
       imagePath: 'assets/images/ice_coffe.jpeg',
+      description: 'Refrescante infusão de café servido com gelo e um toque suave de baunilha.',
     ),
     Coffee(
       name: 'Latte',
       price: 350.0,
       imagePath: 'assets/images/latte.jpeg',
+      description: 'Espresso suave combinado com uma grande quantidade de leite cremoso vaporizado.',
     ),
   ];
 
   final List<Coffee> _userCart = [];
 
-  // Getters
   List<Coffee> get coffeeShop => _shop;
   List<Coffee> get userCart => _userCart;
 
-  // Adicionar item ao carrinho
   void addItemToCart(Coffee coffee) {
     int index = _userCart.indexWhere((item) => item.name == coffee.name);
     
@@ -49,6 +51,7 @@ class CoffeeShop extends ChangeNotifier {
           name: coffee.name,
           price: coffee.price,
           imagePath: coffee.imagePath,
+          description: coffee.description,
           quantity: 1,
         ),
       );
@@ -56,7 +59,6 @@ class CoffeeShop extends ChangeNotifier {
     notifyListeners();
   }
 
-  // Remover ou decrementar item do carrinho
   void removeItemFromCart(Coffee coffee) {
     int index = _userCart.indexWhere((item) => item.name == coffee.name);
     
@@ -70,13 +72,11 @@ class CoffeeShop extends ChangeNotifier {
     }
   }
 
-  // Limpar carrinho
   void clearCart() {
     _userCart.clear();
     notifyListeners();
   }
 
-  // Calcular valor total do carrinho
   double calculateTotal() {
     double total = 0;
     for (var item in _userCart) {
