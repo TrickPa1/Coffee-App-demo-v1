@@ -13,6 +13,41 @@ class CoffeeCard extends StatelessWidget {
     required this.onAddPressed,
   });
 
+  Widget _buildImage(BuildContext context, ThemeData theme) {
+    bool isNetworkImage = coffee.imagePath.startsWith('http');
+
+    if (isNetworkImage) {
+      return Image.network(
+        coffee.imagePath,
+        width: double.infinity,
+        fit: BoxFit.cover,
+        loadingBuilder: (context, child, loadingProgress) {
+          if (loadingProgress == null) return child;
+          return Container(
+            color: theme.colorScheme.surface,
+            child: const Center(
+              child: CircularProgressIndicator(strokeWidth: 2),
+            ),
+          );
+        },
+        errorBuilder: (context, error, stackTrace) => Container(
+          color: theme.colorScheme.surface,
+          child: const Icon(Icons.coffee, size: 40),
+        ),
+      );
+    } else {
+      return Image.asset(
+        coffee.imagePath,
+        width: double.infinity,
+        fit: BoxFit.cover,
+        errorBuilder: (context, error, stackTrace) => Container(
+          color: theme.colorScheme.surface,
+          child: const Icon(Icons.coffee, size: 40),
+        ),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -34,19 +69,11 @@ class CoffeeCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Imagem do Café
+            // Imagem do Café (Rede ou Asset)
             Expanded(
               child: ClipRRect(
                 borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
-                child: Image.asset(
-                  coffee.imagePath,
-                  width: double.infinity,
-                  fit: BoxFit.cover,
-                  errorBuilder: (context, error, stackTrace) => Container(
-                    color: theme.colorScheme.surface,
-                    child: const Icon(Icons.coffee, size: 40),
-                  ),
-                ),
+                child: _buildImage(context, theme),
               ),
             ),
 
@@ -54,7 +81,7 @@ class CoffeeCard extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.all(10.0),
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start, 
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
                     coffee.name,

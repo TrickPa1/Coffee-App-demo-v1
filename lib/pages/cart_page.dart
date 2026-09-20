@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import '../components/coffee_tile.dart';
 import '../models/coffee.dart';
 import '../models/coffee_shop.dart';
+import 'checkout_page.dart';
 
 class CartPage extends StatelessWidget {
   const CartPage({super.key});
@@ -78,7 +79,7 @@ class CartPage extends StatelessWidget {
                         ),
                       ),
                       Text(
-                        '${value.calculateTotal().toStringAsFixed(2)} MT',
+                        '${value.cartTotalAmount.toStringAsFixed(2)} MT', // ✅ Usando cartTotalAmount
                         style: TextStyle(
                           fontSize: 20,
                           fontWeight: FontWeight.bold,
@@ -98,15 +99,16 @@ class CartPage extends StatelessWidget {
                       ),
                     ),
                     onPressed: () {
-                      value.clearCart();
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text('Pedido efetuado com sucesso!'),
+                      // ✅ Navega para a tela de Checkout com M-Pesa / e-Mola
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const CheckoutPage(),
                         ),
                       );
                     },
                     child: const Text(
-                      'Pagar Agora',
+                      'Avançar para Checkout',
                       style: TextStyle(fontSize: 16),
                     ),
                   ),
