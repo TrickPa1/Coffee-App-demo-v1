@@ -1,65 +1,87 @@
-import 'package:coffe_shop/models/coffee.dart';
 import 'package:flutter/material.dart';
+import 'coffee.dart';
 
-class CoffeeShop extends ChangeNotifier{
-
-  // lista de cafés a venda
+class CoffeeShop extends ChangeNotifier {
+  // Lista de cafés disponíveis
   final List<Coffee> _shop = [
-    // Café Preto
     Coffee(
-      name: 'Preto Forte', 
-      price: "200", 
+      name: 'Preto Forte',
+      price: 200.0,
       imagePath: 'assets/images/black.png',
     ),
-
-    // espresso
     Coffee(
-      name: 'Espresso', 
-      price: "300", 
-      imagePath: "assets/images/espresso.jpeg",
+      name: 'Espresso',
+      price: 300.0,
+      imagePath: 'assets/images/espresso.jpeg',
     ),
-
-    // cappucino
     Coffee(
-      name: 'Cappucino', 
-      price: "275", 
-      imagePath: "assets/images/cappucino.jpeg",
+      name: 'Cappuccino',
+      price: 275.0,
+      imagePath: 'assets/images/cappucino.jpeg',
     ),
-
-    // caffe gelado
     Coffee(
-      name: 'Gelado', 
-      price: "280", 
-      imagePath: "assets/images/ice_coffe.jpeg",
+      name: 'Café Gelado',
+      price: 280.0,
+      imagePath: 'assets/images/ice_coffe.jpeg',
     ),
-
-    // latte
     Coffee(
-      name: 'Latte', 
-      price: "350", 
-      imagePath: "assets/images/latte.jpeg",
+      name: 'Latte',
+      price: 350.0,
+      imagePath: 'assets/images/latte.jpeg',
     ),
   ];
 
-  // carrinho
-  List<Coffee> _userCart = [];
-  
-  // obter carrinho
-  List<Coffee> get coffeeShop => _shop;
+  final List<Coffee> _userCart = [];
 
-  // obter lista de cafés
+  // Getters
+  List<Coffee> get coffeeShop => _shop;
   List<Coffee> get userCart => _userCart;
 
-  // adicionar item no carrinho
+  // Adicionar item ao carrinho
   void addItemToCart(Coffee coffee) {
-    _userCart.add(coffee);
+    int index = _userCart.indexWhere((item) => item.name == coffee.name);
+    
+    if (index >= 0) {
+      _userCart[index].quantity++;
+    } else {
+      _userCart.add(
+        Coffee(
+          name: coffee.name,
+          price: coffee.price,
+          imagePath: coffee.imagePath,
+          quantity: 1,
+        ),
+      );
+    }
     notifyListeners();
   }
 
-  // remover item do carrinho
+  // Remover ou decrementar item do carrinho
   void removeItemFromCart(Coffee coffee) {
-    _userCart.remove(coffee);
+    int index = _userCart.indexWhere((item) => item.name == coffee.name);
+    
+    if (index >= 0) {
+      if (_userCart[index].quantity > 1) {
+        _userCart[index].quantity--;
+      } else {
+        _userCart.removeAt(index);
+      }
+      notifyListeners();
+    }
+  }
+
+  // Limpar carrinho
+  void clearCart() {
+    _userCart.clear();
     notifyListeners();
   }
 
+  // Calcular valor total do carrinho
+  double calculateTotal() {
+    double total = 0;
+    for (var item in _userCart) {
+      total += item.price * item.quantity;
+    }
+    return total;
+  }
 }
